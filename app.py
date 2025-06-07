@@ -41,7 +41,7 @@ with st.empty():
         else:
             st.write("🔍 Aguardando novo sorteio...")
             time.sleep(5)
-            st.experimental_rerun()
+            st.rerun()
 
 # Exibir últimos sorteios
 st.subheader("Últimos Sorteios")
