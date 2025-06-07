@@ -10,6 +10,7 @@ HISTORICO_PATH = "historico_resultados.json"
 st.set_page_config(page_title="Roleta IA", layout="wide")
 st.title("🎯 Previsão Inteligente de Roleta")
 
+# Inicializar histórico
 if "historico" not in st.session_state:
     if os.path.exists(HISTORICO_PATH):
         with open(HISTORICO_PATH, "r") as f:
@@ -17,25 +18,30 @@ if "historico" not in st.session_state:
     else:
         st.session_state.historico = []
 
-# Atualização automática
-placeholder = st.empty()
-with placeholder.container():
-    if st.button("⏳ Atualizar Sorteio"):
-        resultado = fetch_latest_result()
-        if resultado:
-            if not st.session_state.historico or resultado["timestamp"] != st.session_state.historico[-1]["timestamp"]:
-                st.session_state.historico.append({
-                    "number": resultado["number"],
-                    "color": resultado["color"],
-                    "timestamp": resultado["timestamp"],
-                    "lucky_numbers": resultado["lucky_numbers"]
-                })
-                salvar_resultado_em_arquivo([{
-                    "number": resultado["number"],
-                    "color": resultado["color"],
-                    "timestamp": resultado["timestamp"],
-                    "lucky_numbers": resultado["lucky_numbers"]
-                }])
+# Captura automática do novo resultado
+with st.empty():
+    resultado = fetch_latest_result()
+
+    if resultado:
+        ultimo_timestamp = (
+            st.session_state.historico[-1]["timestamp"]
+            if st.session_state.historico else None
+        )
+
+        if resultado["timestamp"] != ultimo_timestamp:
+            novo_resultado = {
+                "number": resultado["number"],
+                "color": resultado["color"],
+                "timestamp": resultado["timestamp"],
+                "lucky_numbers": resultado["lucky_numbers"]
+            }
+            st.session_state.historico.append(novo_resultado)
+            salvar_resultado_em_arquivo([novo_resultado])
+            st.experimental_rerun()
+        else:
+            st.write("🔍 Aguardando novo sorteio...")
+            time.sleep(5)
+            st.experimental_rerun()
 
 # Exibir últimos sorteios
 st.subheader("Últimos Sorteios")
