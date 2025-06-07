@@ -25,6 +25,9 @@ log_area = st.empty()
 resultado = fetch_latest_result()
 
 if resultado:
+    # Mostra o resultado retornado (útil para debug)
+    st.write("Resultado capturado:", resultado)
+
     ultimo_timestamp = (
         st.session_state.historico[-1]["timestamp"]
         if st.session_state.historico else None
@@ -40,11 +43,11 @@ if resultado:
         st.session_state.historico.append(novo_resultado)
         salvar_resultado_em_arquivo([novo_resultado])
         log_area.success(f"✅ Novo sorteio capturado: {novo_resultado}")
-        st.experimental_rerun()
+        st.rerun()  # <- uso corrigido aqui
     else:
         log_area.info("🔍 Aguardando novo sorteio...")
         time.sleep(5)
-        st.experimental_rerun()
+        st.rerun()  # <- uso corrigido aqui também
 else:
     log_area.warning("⚠️ Nenhum resultado retornado por fetch_latest_result()")
 
