@@ -37,7 +37,7 @@ with st.empty():
             }
             st.session_state.historico.append(novo_resultado)
             salvar_resultado_em_arquivo([novo_resultado])
-            st.experimental_rerun()
+            st.rerun()
         else:
             st.write("🔍 Aguardando novo sorteio...")
             time.sleep(5)
