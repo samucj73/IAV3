@@ -1,6 +1,7 @@
 import streamlit as st
 import json
 import time
+import  os
 from fetch_and_save import fetch_latest_result, salvar_resultado_em_arquivo
 from roleta_ia import atualizar_e_prever
 
